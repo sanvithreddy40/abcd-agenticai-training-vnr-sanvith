@@ -1,0 +1,856 @@
+{
+  "name": "AI PROJECT",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "File upload",
+        "formDescription": "This is test",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "file upload",
+              "fieldType": "file",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        288,
+        80
+      ],
+      "id": "6400bb08-ed08-4c24-bfa2-44927dad1cb8",
+      "name": "On form submission",
+      "webhookId": "7b40328c-134f-41ad-9c00-162386aef04d"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an expert IT Career Advisor and Evaluator.\n\nRead the user's name and city (if available) from the provided data, and start your response with:\n\"Hi [Name], here are the best career paths and job opportunities for you in [City]!\"\n\n---\n\nStep 1: Analyze the following user profile and suggest the top 3 IT/software career paths that best match their skills, interests, and education.\n\nFor each career path, include:\n1. Career Path Name  \n2. 3–5 Key Skills  \n3. One-line Reason for Recommendation  \n4. YouTube Video Recommendations for each skill:\n   - Use a **YouTube search URL** that opens results for that skill directly:  \n     https://www.youtube.com/results?search_query=[Skill+Name+beginner+tutorial]  \n   - Example: https://www.youtube.com/results?search_query=python+beginner+tutorial  \n   - Prefer trusted channels like *freeCodeCamp.org, Apna College, Telusko, Great Learning, CodeWithHarry*, etc.\n   - Avoid playlists and unavailable links.\n\n---\n\nStep 2: Integrate Job Recommendations\n\nYou will receive a list of job suggestions from a LinkedIn/Job Search node in JSON format (field: `{{ $json.jobList }}`).\n\nAfter suggesting each career path, include **the top 3 most relevant job openings** from that data.\n\nFormat:\n💼 **Top Job Openings for [Career Path Name] in {{ $('Webhook').item.json.body.city }}:**\n1. [Job Title] — [Company Name]  \n   📍 [City] | 🔗 [Job Link]\n2. [Job Title] — [Company Name]  \n   📍 [City] | 🔗 [Job Link]\n3. [Job Title] — [Company Name]  \n   📍 [City] | 🔗 [Job Link]\n\nIf no job data is available, write:\n⚠️ *No recent job openings found for this role in [City]. Try expanding your location filter.*\n\n---\n\nStep 3: Evaluate Your Recommendation Quality\n\nAfter all three paths, provide:\n- A **numeric Score (0–100)** — be realistic. Avoid always giving high scores.\n- A **label** based on the score:\n\n| Score Range | Label |\n|--------------|--------|\n| 0–49 | ⚠️ Needs Improvement |\n| 50–69 | 🟡 Medium |\n| 70–84 | 🟢 Good |\n| 85–100 | 🟣 Excellent |\n\n- A **short reason** (1–2 lines) for the score — e.g., “Good variety in recommendations but some job matches are generic.”\n\nWhen scoring, evaluate:\n- Career relevance  \n- Realism of recommendations  \n- Clarity and completeness  \n- Appropriateness of job matches  \n\nOnly give 90+ when recommendations are truly exceptional.\n\n---\n\nStep 4: Output Format\n\nHi [Name], here are the top 3 career paths and job suggestions for you in [City]!\n\n1. **[Career Path Name]**  \n   - Skills: [Skill 1, Skill 2, Skill 3, Skill 4, Skill 5]  \n   - Reason: [One-line reason]  \n   - YouTube Videos:\n       • [Skill 1] → https://www.youtube.com/results?search_query=[Skill+1+beginner+tutorial]  \n       • [Skill 2] → https://www.youtube.com/results?search_query=[Skill+2+beginner+tutorial]  \n       • [Skill 3] → https://www.youtube.com/results?search_query=[Skill+3+beginner+tutorial]  \n\n   💼 **Top Job Openings in [City]:**\n   {{ $json.jobList }}\n\n2. **[Career Path Name]**  \n   - Skills: [Skill 1, Skill 2, Skill 3, Skill 4, Skill 5]  \n   - Reason: [One-line reason]  \n   - YouTube Videos:\n       • [Skill 1] → https://www.youtube.com/results?search_query=[Skill+1+beginner+tutorial]  \n       • [Skill 2] → https://www.youtube.com/results?search_query=[Skill+2+beginner+tutorial]  \n       • [Skill 3] → https://www.youtube.com/results?search_query=[Skill+3+beginner+tutorial]  \n\n   💼 **Top Job Openings in [City]:**\n   {{ $json.jobList }}\n\n3. **[Career Path Name]**  \n   - Skills: [Skill 1, Skill 2, Skill 3, Skill 4, Skill 5]  \n   - Reason: [One-line reason]  \n   - YouTube Videos:\n       • [Skill 1] → https://www.youtube.com/results?search_query=[Skill+1+beginner+tutorial]  \n       • [Skill 2] → https://www.youtube.com/results?search_query=[Skill+2+beginner+tutorial]  \n       • [Skill 3] → https://www.youtube.com/results?search_query=[Skill+3+beginner+tutorial]  \n\n   💼 **Top Job Openings in [City]:**\n   {{ $json.jobList }}\n\n---\n\n**Score:** [number]/100  \n**Evaluation:** [Needs Improvement / Medium / Good / Excellent]  \n**Reason:** [Short explanation for the score]\n\n---\n\n**Profile:**\n{{ $json.text }}\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        1184,
+        96
+      ],
+      "id": "be5b155b-87bf-4fff-9616-77356bcc3f5b",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        224
+      ],
+      "id": "cdb4f825-6ae2-4e24-8a6a-fcd7b19d72ef",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "IsMTqfqoTDKX3HNP",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputBinaryField": "=file_upload"
+      },
+      "type": "n8n-nodes-docx-converter.docxToText",
+      "typeVersion": 1,
+      "position": [
+        848,
+        176
+      ],
+      "id": "d98beab8-b7ca-4375-9aa8-9f1a5c82fa93",
+      "name": "DOCX to Text"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json[\"file upload\"][0].filename }}",
+                    "rightValue": ".docx",
+                    "operator": {
+                      "type": "string",
+                      "operation": "endsWith"
+                    },
+                    "id": "67b210e0-7c5b-456d-a437-a459131d445a"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "28147cf7-ea7a-48e6-97d0-e35c8ce9dc98",
+                    "leftValue": "={{ $json[\"file upload\"][0].filename }}",
+                    "rightValue": ".pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "endsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e6f48545-22ea-4137-8059-67475ec572d0",
+                    "leftValue": "={{ $json[\"file upload\"][0].filename }}",
+                    "rightValue": ".pdf or .docx",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEndsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        544,
+        144
+      ],
+      "id": "15967993-d370-402c-8882-430bd2ea43c0",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "file_upload",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        880,
+        400
+      ],
+      "id": "0be44b9e-ff78-4209-b7d5-1334b9b63e91",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "chatId": "6184052148",
+        "text": "⚠️ Unsupported file type detected!  Please upload a valid document format: - 📄 DOCX (.docx) - 📕 PDF (.pdf)  Other file types like images or text files are not supported right now.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        880,
+        624
+      ],
+      "id": "1c78c3c3-7fb2-4578-a00a-c905b9c7ec92",
+      "name": "Send a text message2",
+      "webhookId": "e05995d7-d288-4192-beb0-505342b84242",
+      "credentials": {
+        "telegramApi": {
+          "id": "nRKkGTxH5JPovBV0",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "6184052148",
+        "text": "={{ $json.text }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2192,
+        -64
+      ],
+      "id": "697186c3-cc6a-4917-9c66-15e4727b28c8",
+      "name": "Send a text message",
+      "webhookId": "d12d5e17-b317-4699-8bc2-4db7a92d5181",
+      "credentials": {
+        "telegramApi": {
+          "id": "nRKkGTxH5JPovBV0",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Webhook').item.json.body.deliveryMode }}",
+                    "rightValue": "Gmail",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "9f91eeb9-3189-4824-a4f7-58f9575411b9"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "ccb4e759-a43a-40c5-baa8-b68de1c4965b",
+                    "leftValue": "={{ $('Webhook').item.json.body.deliveryMode }}",
+                    "rightValue": "Telegram",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "99e19acb-99dc-4f4d-8e10-4fb0b5c33d0c",
+                    "leftValue": "={{ $('Webhook').item.json.body.deliveryMode }}",
+                    "rightValue": "Both",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1744,
+        96
+      ],
+      "id": "19149b7d-c247-47c8-9997-aede1212a482",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const text = $json[\"output\"] || \"\";\n\n// Replace newlines and multiple spaces with a single space\nconst cleanedText = text.replace(/\\s+/g, ' ').trim();\n\n// Count words\nconst wordCount = cleanedText ? cleanedText.split(' ').length : 0;\n\nreturn [\n  {\n    json: {\n      text,\n      wordCount\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1536,
+        96
+      ],
+      "id": "daf144c0-034b-4716-af68-16d30148652a",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Webhook').item.json.body.email }}",
+        "subject": "Carrer Guidance Report",
+        "emailType": "text",
+        "message": "={{ $json.text }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2208,
+        192
+      ],
+      "id": "c527185a-cd49-4fd0-8965-8b90af050734",
+      "name": "Send a message",
+      "webhookId": "8f2d9be3-0794-4e18-bc52-bb545c50df54",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "KIhXq5Q807xDjsJ7",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1hxIDjyof-oFyqcZx_mHGEr6kaCwyCaV-lRxF65B9XgM/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 829845211,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1hxIDjyof-oFyqcZx_mHGEr6kaCwyCaV-lRxF65B9XgM/edit#gid=829845211"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "NAME": "={{ $json.body.name }}",
+            "EMAIL ID": "={{ $json.body.email }}",
+            "TELEGRAM ID": "={{ $json.body.telegramId }}",
+            "SKILLS": "={{ $json.body.skills }}",
+            "FILE TYPE": "={{ $json.body.fileType }}",
+            "DELIVERY MODE": "={{ $json.body.deliveryMode }}",
+            "CITY": "={{ $json.body.city }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "NAME",
+              "displayName": "NAME",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "EMAIL ID",
+              "displayName": "EMAIL ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "TELEGRAM ID",
+              "displayName": "TELEGRAM ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "SKILLS",
+              "displayName": "SKILLS",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "FILE TYPE",
+              "displayName": "FILE TYPE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DELIVERY MODE",
+              "displayName": "DELIVERY MODE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "CITY",
+              "displayName": "CITY",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        512,
+        -64
+      ],
+      "id": "259f5791-0040-4dc7-9e1e-84e3d2beaf4a",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VsVywx2h7dX3qjhA",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "0e3138a7-36e7-496e-b7ec-30addedb3478",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        256,
+        448
+      ],
+      "id": "ab9513b3-bdfa-4982-8b6b-17c2ab38f234",
+      "name": "Webhook",
+      "webhookId": "0e3138a7-36e7-496e-b7ec-30addedb3478"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.fileType }}",
+                    "rightValue": "DOCX",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "7d385cf3-561d-4f4f-ae8b-2210e6461991"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e324b9b0-e28a-44a6-b8d6-8cb6aa4b98a6",
+                    "leftValue": "={{ $json.body.fileType }}",
+                    "rightValue": "PDF",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1c4944a5-fee7-46b0-a8b3-4756e811d813",
+                    "leftValue": "={{ $json.body.fileType }}",
+                    "rightValue": "DOCX or PDF",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEquals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        496,
+        464
+      ],
+      "id": "ff8dad81-73a1-4701-95d2-9ea9236dcc1c",
+      "name": "Switch2"
+    },
+    {
+      "parameters": {
+        "operation": "google_jobs",
+        "q": "={{ $json.jobQuery }}",
+        "additionalFields": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-serpapi.serpApi",
+      "typeVersion": 1,
+      "position": [
+        1648,
+        -64
+      ],
+      "id": "41a4e22e-ed93-4180-ba3b-f43370285035",
+      "name": "Google_jobs search",
+      "credentials": {
+        "serpApi": {
+          "id": "HNZrsu47HAUd2rJq",
+          "name": "SerpApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// --- Step 1: Get AI Agent output text ---\nconst text = $json.data || $json.text || $json.output || $json; \n\n// --- Step 2: Get city name from Webhook input ---\nconst city = $item(0).$node[\"Webhook\"].json.body.city || \"India\";\n\n// --- Step 3: Extract all skill lines from the AI response ---\nconst skillMatches = text.match(/Skills:\\s*(.*?)(?:\\n|Reason:)/g);\n\n// --- Step 4: Clean and combine all skill names ---\nlet skills = [];\nif (skillMatches) {\n  skills = skillMatches.map(s => s\n    .replace(/Skills:/, '')\n    .replace(/Reason:.*/, '')\n    .replace(/\\*/g, '')\n    .replace(/\\n/g, '')\n    .trim()\n  );\n}\n\n// --- Step 5: Combine all skills into a single job search query ---\nconst skillQuery = skills.join(', ');\n\n// --- Step 6: Build a SerpApi-friendly query ---\nconst jobQuery = `Jobs for ${skillQuery} in ${city}`;\n\n// --- Step 7: Return the result ---\nreturn [\n  {\n    json: {\n      city,\n      skills,\n      jobQuery\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1456,
+        -80
+      ],
+      "id": "93fc1299-110f-433a-a81c-7ed1e8b56d33",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "returnAll": true,
+        "filters": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.youTubeTool",
+      "typeVersion": 1,
+      "position": [
+        1376,
+        240
+      ],
+      "id": "0241f53a-779d-468a-a38f-1539b7718877",
+      "name": "Get many videos in YouTube",
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "tcJd02rDmitSELcC",
+          "name": "YouTube account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $workflow.id }}",
+        "contextWindowLength": 100
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1248,
+        288
+      ],
+      "id": "f502c624-e955-48ca-84c8-6204fccfef9d",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DOCX to Text": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "DOCX to Text",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Switch2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch2": {
+      "main": [
+        [
+          {
+            "node": "DOCX to Text",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        []
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Google_jobs search",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google_jobs search": {
+      "main": [
+        []
+      ]
+    },
+    "Get many videos in YouTube": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5fc24d7a-5795-42ed-a264-71454d82f10a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1d4c5c1c774edc4eaf9213e47d037ca0b35a55f95e3c7f696d22cd37c3e5e174"
+  },
+  "id": "4FvdQ96lcBNbanfL",
+  "tags": []
+}
