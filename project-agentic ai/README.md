@@ -125,8 +125,26 @@ This system is ideal for:
 - Automated **resume analysis and job matching** tools  
 
 ---
+## Workflow
+Form Submission / Webhook
+        ↓
+Append Row in Google Sheet
+        ↓
+Switch (File Type)
+     ↙        ↘
+ DOCX → Text   PDF → Extract Text
+        ↓
+AI Agent (Gemini)
+        ↓
+ ┌───────────────┬──────────────┐
+ │  YouTube API  │  SerpApi Jobs  
+ └───────────────┴──────────────┘
+        ↓
+Code (JavaScript) → Format Results
+        ↓
+Send to Gmail / Telegram
 
-## 📊 Workflow Overview (Text Diagram)
+## 📊 N8N Workflow Overview (Text Diagram)
 
 <img width="1918" height="1079" alt="Workflow Project" src="https://github.com/user-attachments/assets/2ab1da68-32ef-44d3-91e4-ed829632326e" />
 
