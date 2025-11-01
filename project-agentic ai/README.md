@@ -134,4 +134,8 @@ This system is ideal for:
 
 [AI_Career_Guidance_and_Job_Analyst.pptx](https://github.com/user-attachments/files/23281648/AI_Career_Guidance_and_Job_Analyst.pptx)
 
+## Recording of project
+
+https://drive.google.com/file/d/1GjLGfyFmDqF5oaLPl5sBMNyCUyFEp_Lc/view?usp=sharing
+
 
