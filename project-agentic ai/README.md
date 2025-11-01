@@ -128,6 +128,7 @@ This system is ideal for:
 
 ## 📊 Workflow Overview (Text Diagram)
 
+<img width="1918" height="1079" alt="Workflow Project" src="https://github.com/user-attachments/assets/2ab1da68-32ef-44d3-91e4-ed829632326e" />
 
 
 
