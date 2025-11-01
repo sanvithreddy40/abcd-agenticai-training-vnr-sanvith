@@ -81,6 +81,9 @@ When a user submits their form or uploads a resume (DOCX/PDF), the system:
 6. Results are formatted using **JavaScript nodes**.  
 7. Recommendations are sent through **Email and Telegram**.
 
+<img width="863" height="885" alt="image" src="https://github.com/user-attachments/assets/c1993219-9fc0-4161-81e6-d099d31a4be8" />
+
+
 ---
 
 ## 🚀 Key Features
@@ -125,24 +128,6 @@ This system is ideal for:
 - Automated **resume analysis and job matching** tools  
 
 ---
-## Workflow
-Form Submission / Webhook
-        ↓
-Append Row in Google Sheet
-        ↓
-Switch (File Type)
-     ↙        ↘
- DOCX → Text   PDF → Extract Text
-        ↓
-AI Agent (Gemini)
-        ↓
- ┌───────────────┬──────────────┐
- │  YouTube API  │  SerpApi Jobs  
- └───────────────┴──────────────┘
-        ↓
-Code (JavaScript) → Format Results
-        ↓
-Send to Gmail / Telegram
 
 ## 📊 N8N Workflow Overview (Text Diagram)
 
